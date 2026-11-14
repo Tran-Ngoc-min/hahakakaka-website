@@ -776,6 +776,52 @@ body.recipient-mode .main-container { padding-top: 24px; }
 
 <script>
 (function() {
+    // ===== SUPABASE STORAGE CONFIG =====
+    // Điền URL project và anon/public key của Supabase tại đây.
+    // Không bao giờ đặt service_role key trong HTML công khai.
+    var SUPABASE_URL = https://vdyykiicdgjdeimugpcc.supabase.co/rest/v1/;
+    var SUPABASE_ANON_KEY = sb_publishable_M2ojzVrDAhEg5UO-vBEFaw_TZsT9p6K;
+    var SUPABASE_AUDIO_BUCKET = "my-audio";
+
+    function uploadAudioToSupabase(fileBlob, originalName) {
+        return new Promise(function(resolve, reject) {
+            if (!SUPABASE_URL || SUPABASE_URL.indexOf("YOUR_") !== -1 ||
+                !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.indexOf("YOUR_") !== -1) {
+                reject(new Error("Chưa cấu hình Supabase URL và anon key trong code."));
+                return;
+            }
+            var baseUrl = SUPABASE_URL;
+            if (baseUrl.endsWith("/")) baseUrl = baseUrl.slice(0, -1);
+            var ext = (String(originalName || "music.mp3").split(".").pop() || "mp3")
+                .toLowerCase().replace(/[^a-z0-9]/g, "");
+            if (!ext || ext.length > 8) ext = "mp3";
+            var uniqueName = "shared-" + Date.now() + "-" +
+                (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)) +
+                "." + ext;
+            var objectPath = uniqueName;
+
+            fetch(baseUrl + "/storage/v1/object/" +
+                encodeURIComponent(SUPABASE_AUDIO_BUCKET) + "/" + objectPath, {
+                method: "POST",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+                    "Content-Type": fileBlob.type || "audio/mpeg",
+                    "x-upsert": "false"
+                },
+                body: fileBlob
+            }).then(function(response) {
+                if (!response.ok) {
+                    return response.text().then(function(msg) {
+                        throw new Error("Supabase upload thất bại (" + response.status + "): " + msg);
+                    });
+                }
+                resolve(baseUrl + "/storage/v1/object/public/" +
+                    encodeURIComponent(SUPABASE_AUDIO_BUCKET) + "/" + objectPath);
+            }).catch(reject);
+        });
+    }
+
     var APP_DATA = {
         femaleName: "Em",
         maleName: "Anh",
@@ -1457,13 +1503,34 @@ body.recipient-mode .main-container { padding-top: 24px; }
         }
     }
 
-    function generateShareLink() {
+    async function generateShareLink() {
         try {
             var dataToShare = Object.assign({}, APP_DATA);
+
             if (dataToShare.hasLocalAudio || String(dataToShare.musicUrl || "").startsWith("data:")) {
-                alert("Lưu ý: File nhạc tải trực tiếp từ máy quá lớn để nhét vào link URL. Hãy dùng nút Tải file tặng anh để gửi kèm bài hát từ máy. Link URL bên dưới sẽ phát bản nhạc piano mặc định!");
-                dataToShare.musicUrl = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3";
+                var audioBlob = null;
+                if (dataToShare.hasLocalAudio) {
+                    audioBlob = await new Promise(function(resolve) {
+                        loadAudioBlobFromDB(function(blobFile) { resolve(blobFile || null); });
+                    });
+                } else if (String(dataToShare.musicUrl || "").startsWith("data:")) {
+                    try {
+                        audioBlob = await fetch(dataToShare.musicUrl).then(function(r) { return r.blob(); });
+                    } catch (e) {
+                        audioBlob = null;
+                    }
+                }
+
+                if (!audioBlob) {
+                    alert("Không tìm thấy file nhạc đã tải trên trình duyệt này. Hãy chọn lại file nhạc trong phần chỉnh sửa rồi bấm Lưu.");
+                    return;
+                }
+
+                alert("Đang tải bài nhạc lên Supabase để tạo link chia sẻ. Vui lòng đợi...");
+                var publicAudioUrl = await uploadAudioToSupabase(audioBlob, dataToShare.musicName || "music.mp3");
+                dataToShare.musicUrl = publicAudioUrl;
                 dataToShare.hasLocalAudio = false;
+                dataToShare.musicName = dataToShare.musicName || "Nhạc tùy chỉnh";
             }
 
             var encoded = encodeDataToHash(dataToShare);
@@ -1471,7 +1538,7 @@ body.recipient-mode .main-container { padding-top: 24px; }
 
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(shareUrl).then(function() {
-                    alert("Đã sao chép link người nhận thành công!");
+                    alert("Đã sao chép link người nhận thành công! Link này phát bài nhạc bé đã chọn.");
                 }).catch(function() {
                     prompt("Sao chép link này gửi bạn trai:", shareUrl);
                 });
@@ -1479,7 +1546,9 @@ body.recipient-mode .main-container { padding-top: 24px; }
                 prompt("Sao chép link này gửi bạn trai:", shareUrl);
             }
         } catch (err) {
-            alert("Dữ liệu quá lớn để tạo link URL. Hãy dùng nút Tải file tặng anh!");
+            console.error("Lỗi tạo link chia sẻ:", err);
+            alert("Không tạo được link chia sẻ: " + (err.message || err) +
+                "\\nKiểm tra cấu hình Supabase Storage, bucket và quyền upload.");
         }
     }
 
