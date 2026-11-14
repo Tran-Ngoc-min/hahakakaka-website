@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Món Quà Dành Cho Anh ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #ff6b81;
+    --primary-dark: #ee5253;
+    --secondary: #feca57;
+    --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fbc2eb 100%);
+    --card-bg: rgba(255, 255, 255, 0.96);
+    --text-dark: #2f3542;
+    --text-muted: #57606f;
+    --shadow: 0 15px 35px rgba(255, 107, 129, 0.2);
+    --radius: 24px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+#heart-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* THANH CÔNG CỤ NGƯỜI GỬI */
+.sender-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 10px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    z-index: 900;
+    font-size: 0.9rem;
+}
+
+.sender-toolbar.hidden { display: none !important; }
+
+.toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.toolbar-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 12px rgba(255, 107, 129, 0.3);
+}
+
+.toolbar-btn:active { transform: scale(0.96); }
+.toolbar-btn.btn-outline {
+    background: #fff;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+}
+
+/* THANH THOÁT CHẾ ĐỘ XEM THỬ */
+.preview-exit-bar {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(47, 53, 66, 0.92);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 30px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    z-index: 950;
+    font-size: 0.85rem;
+}
+
+.preview-exit-bar.active { display: flex; }
+
+/* PHONG THƯ MỞ ĐẦU */
+.envelope-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(47, 53, 66, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+    transition: opacity 0.4s ease;
+}
+
+.envelope-card {
+    background: #fff;
+    width: 100%;
+    max-width: 380px;
+    padding: 36px 24px;
+    border-radius: var(--radius);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    text-align: center;
+    border: 3px dashed #ffb8b8;
+}
+
+.envelope-icon {
+    font-size: 4.5rem;
+    margin-bottom: 12px;
+    animation: heartPulse 1.4s infinite ease-in-out;
+    display: inline-block;
+}
+
+.envelope-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.3rem;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+}
+
+.envelope-sub {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.open-gift-btn {
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+    animation: pulseBtn 1.8s infinite;
+    font-family: inherit;
+    width: 100%;
+}
+
+@keyframes heartPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes pulseBtn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+/* ĐĨA THAN VINYL */
+.vinyl-floating {
+    position: fixed;
+    top: 68px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #333 30%, #111 70%, #000 100%);
+    border: 3px solid #ffeaa7;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 800;
+}
+
+body.recipient-mode .vinyl-floating { top: 20px; }
+.vinyl-spinning { animation: spinVinyl 3.5s linear infinite; }
+.vinyl-paused { animation-play-state: paused; opacity: 0.75; }
+
+.vinyl-center {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #fff;
+}
+
+@keyframes spinVinyl {
+    100% { transform: rotate(360deg); }
+}
+
+/* NỘI DUNG CHÍNH */
+.main-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 74px 16px 80px;
+    position: relative;
+    z-index: 2;
+}
+
+body.recipient-mode .main-container { padding-top: 24px; }
+
+.love-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 26px 20px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.couple-header {
+    text-align: center;
+    margin: 12px 0 16px;
+}
+
+.couple-names {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.8rem;
+    color: var(--primary-dark);
+    line-height: 1.2;
+}
+
+.timer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.timer-box {
+    background: linear-gradient(145deg, #fff5f6, #ffebee);
+    padding: 12px 4px;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid rgba(255, 182, 193, 0.5);
+}
+
+.timer-num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    line-height: 1.1;
+}
+
+.timer-unit {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.section-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem;
+    color: var(--primary-dark);
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.letter-content {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.45rem;
+    line-height: 1.7;
+    color: #2c3e50;
+    min-height: 100px;
+    white-space: pre-line;
+    border-left: 3px solid var(--primary);
+    padding-left: 14px;
+}
+
+.cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background: var(--primary-dark);
+    vertical-align: middle;
+    animation: blink 0.8s infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* LƯỚI 9 ẢNH */
+.photo-grid-9 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 10px;
+}
+
+@media (max-width: 500px) {
+    .photo-grid-9 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+
+.polaroid-item {
+    background: white;
+    padding: 8px 8px 14px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.polaroid-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #ffeaa7;
+    display: block;
+}
+
+.polaroid-cap {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.05rem;
+    color: var(--text-dark);
+    margin-top: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* VÒNG QUAY */
+.wheel-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.wheel-pointer {
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 26px solid #ff4757;
+    position: absolute;
+    top: -10px;
+    z-index: 20;
+}
+
+#wheelCanvas {
+    max-width: 100%;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.spin-btn {
+    margin-top: 18px;
+    background: linear-gradient(135deg, #feca57, #ff9f43);
+    color: #222;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.prize-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.prize-modal.show { display: flex; }
+
+.voucher-ticket {
+    background: #fff;
+    border: 2px dashed #ff6b81;
+    border-radius: 18px;
+    padding: 24px;
+    max-width: 320px;
+    width: 100%;
+    text-align: center;
+}
+
+.claimed-coupon {
+    background: #fff;
+    border-left: 4px solid var(--primary);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* MODAL EDITOR */
+.editor-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 10001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.editor-modal.active { display: flex; }
+
+.editor-body {
+    background: #fff;
+    width: 100%;
+    max-width: 640px;
+    max-height: 88vh;
+    border-radius: 20px;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.editor-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.editor-section-title {
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.form-group { margin-bottom: 12px; }
+.form-label { font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 5px; }
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    background: #fff;
+}
+
+.music-status-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 5px 10px;
+    background: #e3fcef;
+    color: #006644;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.wheel-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.wheel-item-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wheel-item-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #2f3542;
+    flex-shrink: 0;
+}
+
+.del-wheel-btn {
+    background: #ffeaa7;
+    color: #d63031;
+    border: none;
+    width: 34px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.add-wheel-btn {
+    background: #fff;
+    color: var(--primary-dark);
+    border: 1.5px dashed var(--primary);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+}
+
+.upload-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+}
+
+@media (max-width: 480px) {
+    .upload-slots-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.slot-card {
+    background: #fff;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.slot-card.has-img { border-style: solid; border-color: #ffb8b8; }
+
+.slot-preview {
+    width: 100%;
+    height: 85px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #e2e8f0;
+    margin-bottom: 6px;
+}
+
+.slot-caption-input {
+    width: 100%;
+    font-size: 0.8rem;
+    padding: 4px 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-family: inherit;
+    margin-bottom: 6px;
+}
+
+.slot-upload-btn {
+    font-size: 0.75rem;
+    padding: 5px 8px;
+    border-radius: 12px;
+    background: #f1f2f6;
+    color: #333;
+    cursor: pointer;
+    border: 1px solid #ced6e0;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.bulk-upload-banner {
+    background: #fff;
+    border: 1px dashed var(--primary);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="heart-canvas"></canvas>
+
+<!-- THANH CÔNG CỤ NGƯỜI GỬI -->
+<div id="senderToolbar" class="sender-toolbar">
+    <div><strong>Chế độ Người gửi</strong></div>
+    <div class="toolbar-actions">
+        <button type="button" id="btnOpenEditor" class="toolbar-btn btn-outline">⚙️ Sửa nội dung, Nhạc & Vòng quay</button>
+        <button type="button" id="btnPreviewMode" class="toolbar-btn btn-outline">👁️ Xem thử bản của anh</button>
+        <button type="button" id="btnExportFile" class="toolbar-btn btn-outline">📥 Tải file tặng anh</button>
+        <button type="button" id="btnShareLink" class="toolbar-btn">🔗 Lấy link gửi anh</button>
+    </div>
+</div>
+
+<!-- THANH THOÁT CHẾ ĐỘ XEM THỬ -->
+<div id="previewExitBar" class="preview-exit-bar">
+    <span>Đang xem giao diện của người nhận</span>
+    <button type="button" id="btnExitPreview" class="toolbar-btn" style="padding: 4px 12px; font-size: 0.8rem;">Quay lại chỉnh sửa</button>
+</div>
+
+<!-- ĐĨA THAN PHÁT NHẠC -->
+<div id="vinylDisk" class="vinyl-floating vinyl-paused" title="Bật/Tắt nhạc">
+    <div class="vinyl-center">♫</div>
+</div>
+
+<!-- PHONG THƯ MỞ ĐẦU -->
+<div id="envelopeOverlay" class="envelope-overlay">
+    <div class="envelope-card">
+        <div class="envelope-icon">💌</div>
+        <h1 class="envelope-title" id="envRecipientTitle">Gửi Anh Yêu!</h1>
+        <p class="envelope-sub">Món quà nhỏ em tự tay chuẩn bị tặng anh. Chạm vào nút bên dưới để mở quà nhé! ✨</p>
+        <button type="button" id="btnOpenGift" class="open-gift-btn">Mở Món Quà Này Nào Anh! ❤️</button>
+    </div>
+</div>
+
+<!-- NỘI DUNG CHÍNH -->
+<div class="main-container" id="mainApp">
+    <div class="couple-header">
+        <h2 class="couple-names">
+            <span id="txtFemale">Em</span> ❤️ <span id="txtMale">Anh</span>
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">Kỷ niệm tình yêu của đôi mình</p>
+    </div>
+
+    <div class="love-card">
+        <h3 style="text-align: center; font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 4px;">Chúng Mình Đã Yêu Nhau Được</h3>
+        <div class="timer-grid">
+            <div class="timer-box">
+                <div class="timer-num" id="dDays">0</div>
+                <div class="timer-unit">Ngày</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="dHours">00</div>
+                <div class="timer-unit">Giờ</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="dMins">00</div>
+                <div class="timer-unit">Phút</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="dSecs">00</div>
+                <div class="timer-unit">Giây</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="love-card">
+        <div class="section-title">Thư Tình Gửi Anh 💌</div>
+        <div class="letter-content" id="typewriterLetter"></div>
+    </div>
+
+    <div class="love-card">
+        <div class="section-title">9 Khoảnh Khắc Của Đôi Mình 📸</div>
+        <div class="photo-grid-9" id="photoGallery"></div>
+    </div>
+
+    <div class="love-card">
+        <div class="section-title">Vòng Quay Đặc Quyền Người Yêu 🎡</div>
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 14px;">
+            Quay để nhận những đặc quyền ngọt ngào từ em nhé!
+        </p>
+        <div class="wheel-wrap">
+            <div class="wheel-pointer"></div>
+            <canvas id="wheelCanvas" width="300" height="300"></canvas>
+            <button type="button" class="spin-btn" id="spinBtn">QUAY NGAY NÀO! ✨</button>
+        </div>
+        <div id="couponsList" style="margin-top: 16px;"></div>
+    </div>
+</div>
+
+<!-- POPUP TRÚNG VÉ -->
+<div id="prizeModal" class="prize-modal">
+    <div class="voucher-ticket">
+        <div style="font-size: 2.8rem; margin-bottom: 6px;">🎟️</div>
+        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px;" id="prizeTitle">Vé Nấu Ăn Tối</div>
+        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">Có giá trị sử dụng vô thời hạn, anh có thể đòi em thực hiện bất kỳ lúc nào!</div>
+        <button type="button" id="btnClaimPrize" class="toolbar-btn" style="width: 100%; justify-content: center;">Cất Vào Ví Nào! 🎫</button>
+    </div>
+</div>
+
+<!-- MODAL EDITOR -->
+<div id="editorModal" class="editor-modal">
+    <div class="editor-body">
+        <h3 style="margin-bottom: 16px; color: var(--primary-dark);">⚙️ Bảng Điều Khiển Người Gửi</h3>
+        
+        <div class="editor-section">
+            <div class="editor-section-title">1. Thông tin đôi bạn & Nhạc nền</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="form-group">
+                    <label class="form-label">Tên của em:</label>
+                    <input class="form-input" id="cfgFemale">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tên của anh:</label>
+                    <input class="form-input" id="cfgMale">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ngày bắt đầu yêu:</label>
+                <input class="form-input" type="date" id="cfgStartDate">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nhạc nền MP3 (Phát từ lúc mở đến lúc tắt):</label>
+                <div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #cbd5e1;">
+                    <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:4px;">Cách 1: Tải file nhạc MP3 / M4A từ máy lên:</label>
+                    <input type="file" id="cfgAudioFile" accept="audio/*" style="font-size:0.85rem;">
+                    <div id="audioStatusBadge" class="music-status-badge" style="display:none;"></div>
+                    
+                    <label style="font-size:0.85rem; font-weight:600; display:block; margin-top:10px; margin-bottom:4px;">Cách 2: Hoặc dán link nhạc MP3 trực tiếp:</label>
+                    <input class="form-input" id="cfgMusicUrl" placeholder="https://...link-nhac.mp3">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Nội dung thư tình:</label>
+                <textarea class="form-textarea" id="cfgLetter" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="editor-section">
+            <div class="editor-section-title">2. Tùy chỉnh các ô Vòng Quay May Mắn (2 – 12 ô)</div>
+            <div class="wheel-items-list" id="wheelItemsEditor"></div>
+            <button type="button" id="btnAddWheelRow" class="add-wheel-btn">➕ Thêm ô đặc quyền mới</button>
+        </div>
+
+        <div class="editor-section" style="margin-bottom: 0;">
+            <div class="editor-section-title">3. Tải lên 9 bức ảnh kỷ niệm</div>
+            <div class="bulk-upload-banner">
+                <p style="font-size:0.85rem; color:#444; margin-bottom:6px;"><strong>Chọn nhanh cả 9 ảnh từ máy:</strong></p>
+                <input type="file" id="cfgAddPhotosBulk" multiple accept="image/*" style="font-size:0.85rem;">
+            </div>
+            <div class="upload-slots-grid" id="uploadSlotsGrid"></div>
+        </div>
+
+        <div style="display:flex; justify-content: flex-end; gap: 8px; margin-top: 18px;">
+            <button type="button" id="btnCloseEditor" class="toolbar-btn btn-outline">Đóng</button>
+            <button type="button" id="btnSaveEditor" class="toolbar-btn">Lưu Tất Cả Thay Đổi</button>
+        </div>
+    </div>
+</div>
+
+<script id="embedded-config-script" type="application/json"></script>
+<audio id="bgMusic" loop preload="none"></audio>
+
+<script>
+(function() {
+    var APP_DATA = {
+        femaleName: "Em",
+        maleName: "Anh",
+        startDate: "2024-02-14",
+        musicUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+        musicName: "Nhạc Piano Mặc Định",
+        hasLocalAudio: false,
+        letter: "Gửi anh yêu!\n\nCảm ơn anh vì đã luôn bên em, che chở và mang lại nhiều niềm vui cho em mỗi ngày. Mỗi khoảnh khắc ở bên anh đều là những kỷ niệm vô giá đối với em.\n\nChúc đôi mình luôn nắm chặt tay nhau đi qua mọi chặng đường phía trước anh nhé! Yêu anh thật nhiều! ❤️",
+        photos: [
+            { url: "", caption: "Ngày đầu gặp nhau" },
+            { url: "", caption: "Cái nắm tay đầu tiên" },
+            { url: "", caption: "Hẹn hò quán quen" },
+            { url: "", caption: "Chiều hoàng hôn lãng mạn" },
+            { url: "", caption: "Nụ cười của anh" },
+            { url: "", caption: "Cùng đi du lịch" },
+            { url: "", caption: "Bữa tối ấm cúng" },
+            { url: "", caption: "Khoảnh khắc ngốc nghếch" },
+            { url: "", caption: "Bên nhau mãi nhé!" }
+        ],
+        coupons: [
+            "Vé Ôm 24/7 Không Giới Hạn",
+            "Vé Nấu Món Anh Thích Nhất",
+            "Vé Tha Lỗi Vô Điều Kiện",
+            "Vé Massage Thư Giãn",
+            "Vé Đi Date Tự Do Theo Ý Anh",
+            "Vé Làm Nũng Cả Ngày"
+        ]
+    };
+
+    var WHEEL_COLORS = ["#ff9a9e", "#fecfef", "#a1c4fd", "#c2e9fb", "#fdcbf1", "#ffeaa7", "#b8e994", "#f8c291", "#82ccdd", "#fad390", "#ffcccc", "#d1ccc0"];
+    var isAppOpened = false;
+    var isSpinning = false;
+    var startAngle = 0;
+    var currentWonPrize = "";
+    var currentAudioBlobUrl = null;
+    var pendingAudioFile = null;
+    var timerInterval = null;
+
+    // Mã hóa Unicode an toàn thay thế thư viện ngoài
+    function encodeDataToHash(obj) {
+        var json = JSON.stringify(obj);
+        return btoa(unescape(encodeURIComponent(json)));
+    }
+
+    function decodeDataFromHash(str) {
+        var json = decodeURIComponent(escape(atob(str)));
+        return JSON.parse(json);
+    }
+
+    // IndexedDB lưu file nhạc
+    function openAudioDB(callback) {
+        try {
+            if (!window.indexedDB) {
+                callback(new Error("No IndexedDB"), null);
+                return;
+            }
+            var req = indexedDB.open("LoveGiftAudioDB", 1);
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                if (!db.objectStoreNames.contains("audioStore")) {
+                    db.createObjectStore("audioStore");
+                }
+            };
+            req.onsuccess = function(e) { callback(null, e.target.result); };
+            req.onerror = function(e) { callback(e.target.error, null); };
+        } catch (err) {
+            callback(err, null);
+        }
+    }
+
+    function saveAudioBlobToDB(file, callback) {
+        openAudioDB(function(err, db) {
+            if (err || !db) {
+                if (callback) callback(false);
+                return;
+            }
+            try {
+                var tx = db.transaction("audioStore", "readwrite");
+                tx.objectStore("audioStore").put(file, "custom_bg_music");
+                tx.oncomplete = function() { if (callback) callback(true); };
+                tx.onerror = function() { if (callback) callback(false); };
+            } catch (e) {
+                if (callback) callback(false);
+            }
+        });
+    }
+
+    function loadAudioBlobFromDB(callback) {
+        openAudioDB(function(err, db) {
+            if (err || !db) {
+                callback(null);
+                return;
+            }
+            try {
+                var tx = db.transaction("audioStore", "readonly");
+                var req = tx.objectStore("audioStore").get("custom_bg_music");
+                req.onsuccess = function() { callback(req.result || null); };
+                req.onerror = function() { callback(null); };
+            } catch (e) {
+                callback(null);
+            }
+        });
+    }
+
+    function deleteAudioBlobFromDB() {
+        openAudioDB(function(err, db) {
+            if (err || !db) return;
+            try {
+                var tx = db.transaction("audioStore", "readwrite");
+                tx.objectStore("audioStore").delete("custom_bg_music");
+            } catch (e) {}
+        });
+    }
+
+    function applyAudioSource(srcUrl, autoPlayNow) {
+        var audio = document.getElementById("bgMusic");
+        var vinyl = document.getElementById("vinylDisk");
+        if (!audio || !srcUrl) return;
+
+        try {
+            audio.pause();
+            audio.src = srcUrl;
+            audio.loop = true;
+
+            if (autoPlayNow || isAppOpened) {
+                var p = audio.play();
+                if (p !== undefined) {
+                    p.then(function() {
+                        if (vinyl) {
+                            vinyl.classList.remove("vinyl-paused");
+                            vinyl.classList.add("vinyl-spinning");
+                        }
+                    }).catch(function(err) {
+                        console.warn("Audio autoplay blocked:", err);
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn("Audio error:", e);
+        }
+    }
+
+    function compressUploadedImage(file, callback) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = new Image();
+            img.onload = function() {
+                var canvas = document.createElement("canvas");
+                var maxDim = 450;
+                var width = img.width;
+                var height = img.height;
+
+                if (width > height) {
+                    if (width > maxDim) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    }
+                } else {
+                    if (height > maxDim) {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+                callback(canvas.toDataURL("image/jpeg", 0.65));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function openLoveGift() {
+        if (isAppOpened) return;
+        isAppOpened = true;
+
+        var overlay = document.getElementById("envelopeOverlay");
+        if (overlay) {
+            overlay.style.opacity = "0";
+            setTimeout(function() {
+                overlay.style.display = "none";
+            }, 400);
+        }
+
+        var audio = document.getElementById("bgMusic");
+        var vinyl = document.getElementById("vinylDisk");
+        if (audio) {
+            audio.loop = true;
+            try {
+                var playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(function() {
+                        if (vinyl) {
+                            vinyl.classList.remove("vinyl-paused");
+                            vinyl.classList.add("vinyl-spinning");
+                        }
+                    }).catch(function(err) {
+                        console.warn("Audio suppressed:", err);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        typeWriter(APP_DATA.letter);
+    }
+
+    function toggleMusic() {
+        var audio = document.getElementById("bgMusic");
+        var vinyl = document.getElementById("vinylDisk");
+        if (!audio) return;
+
+        if (audio.paused) {
+            audio.play().then(function() {
+                vinyl.classList.remove("vinyl-paused");
+                vinyl.classList.add("vinyl-spinning");
+            }).catch(function(err) {
+                alert("Không thể phát nhạc (" + err.message + "). Vui lòng chọn file MP3 khác!");
+            });
+        } else {
+            audio.pause();
+            vinyl.classList.add("vinyl-paused");
+        }
+    }
+
+    function togglePreviewMode(enable) {
+        var tb = document.getElementById("senderToolbar");
+        var pv = document.getElementById("previewExitBar");
+        if (!tb || !pv) return;
+
+        if (enable) {
+            document.body.classList.add("recipient-mode");
+            tb.classList.add("hidden");
+            pv.classList.add("active");
+        } else {
+            document.body.classList.remove("recipient-mode");
+            tb.classList.remove("hidden");
+            pv.classList.remove("active");
+        }
+    }
+
+    function renderView() {
+        document.getElementById("txtFemale").innerText = APP_DATA.femaleName;
+        document.getElementById("txtMale").innerText = APP_DATA.maleName;
+        document.getElementById("envRecipientTitle").innerText = "Gửi " + APP_DATA.maleName + " Yêu! ❤️";
+
+        var gallery = document.getElementById("photoGallery");
+        gallery.innerHTML = "";
+        APP_DATA.photos.slice(0, 9).forEach(function(p, i) {
+            var item = document.createElement("div");
+            item.className = "polaroid-item";
+            var imgUrl = p.url && String(p.url).trim() !== "" ? p.url : "https://dummyimage.com/450x450/ffeaa7/ff6b81.jpg&text=Ảnh+" + (i + 1);
+            item.innerHTML = '<img class="polaroid-img" src="' + imgUrl + '">' +
+                             '<div class="polaroid-cap">' + (p.caption || ('Ảnh ' + (i + 1))) + '</div>';
+            gallery.appendChild(item);
+        });
+
+        initWheel();
+        startTimer();
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        function update() {
+            var start = new Date(APP_DATA.startDate).getTime();
+            var now = new Date().getTime();
+            var diff = Math.max(0, now - start);
+
+            var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            diff -= days * (1000 * 60 * 60 * 24);
+            var hours = Math.floor(diff / (1000 * 60 * 60));
+            diff -= hours * (1000 * 60 * 60);
+            var mins = Math.floor(diff / (1000 * 60));
+            diff -= mins * (1000 * 60);
+            var secs = Math.floor(diff / 1000);
+
+            document.getElementById("dDays").innerText = days;
+            document.getElementById("dHours").innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById("dMins").innerText = mins < 10 ? '0' + mins : mins;
+            document.getElementById("dSecs").innerText = secs < 10 ? '0' + secs : secs;
+        }
+        update();
+        timerInterval = setInterval(update, 1000);
+    }
+
+    function typeWriter(text) {
+        var container = document.getElementById("typewriterLetter");
+        container.innerHTML = '<span id="twBody"></span><span class="cursor"></span>';
+        var span = document.getElementById("twBody");
+        var idx = 0;
+
+        function run() {
+            if (idx < text.length) {
+                span.textContent += text.charAt(idx);
+                idx++;
+                setTimeout(run, 40);
+            }
+        }
+        run();
+    }
+
+    function initWheel() {
+        var canvas = document.getElementById("wheelCanvas");
+        if (!canvas || !canvas.getContext) return;
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, 300, 300);
+
+        var items = APP_DATA.coupons;
+        var count = items.length;
+        if (count === 0) return;
+
+        var arc = (2 * Math.PI) / count;
+
+        for (var i = 0; i < count; i++) {
+            var angle = startAngle + i * arc;
+            ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length];
+
+            ctx.beginPath();
+            ctx.arc(150, 150, 138, angle, angle + arc, false);
+            ctx.arc(150, 150, 24, angle + arc, angle, true);
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "#ffffff";
+            ctx.stroke();
+            ctx.save();
+
+            ctx.fillStyle = "#2f3542";
+            ctx.font = count > 8 ? "bold 10px Quicksand" : "bold 11px Quicksand";
+            ctx.translate(150 + Math.cos(angle + arc / 2) * 90, 150 + Math.sin(angle + arc / 2) * 90);
+            ctx.rotate(angle + arc / 2 + Math.PI / 2);
+
+            var label = String(items[i] || "");
+            var maxChars = count > 8 ? 10 : 13;
+            if (label.length > maxChars) label = label.substring(0, maxChars - 2) + "...";
+
+            ctx.fillText(label, -ctx.measureText(label).width / 2, 0);
+            ctx.restore();
+        }
+    }
+
+    function spinWheel() {
+        if (isSpinning || APP_DATA.coupons.length < 2) return;
+        isSpinning = true;
+        document.getElementById("spinBtn").disabled = true;
+
+        var spinAngleStart = Math.random() * 10 + 12;
+        var spinTimeTotal = Math.random() * 2000 + 3500;
+        var spinTime = 0;
+        var arc = (2 * Math.PI) / APP_DATA.coupons.length;
+
+        function rotate() {
+            spinTime += 30;
+            if (spinTime >= spinTimeTotal) {
+                var deg = startAngle * 180 / Math.PI + 90;
+                var arcd = arc * 180 / Math.PI;
+                var idx = Math.floor((360 - deg % 360) / arcd);
+                var len = APP_DATA.coupons.length;
+                currentWonPrize = APP_DATA.coupons[((idx % len) + len) % len];
+
+                document.getElementById("prizeTitle").innerText = currentWonPrize;
+                document.getElementById("prizeModal").classList.add("show");
+                isSpinning = false;
+                document.getElementById("spinBtn").disabled = false;
+                return;
+            }
+            var t = spinTime / spinTimeTotal;
+            var ease = (t - 1) * (t - 1) * (t - 1) + 1;
+            startAngle += ((spinAngleStart * (1 - ease)) * Math.PI / 180);
+            initWheel();
+            setTimeout(rotate, 30);
+        }
+        rotate();
+    }
+
+    function claimPrize() {
+        document.getElementById("prizeModal").classList.remove("show");
+        var bag = document.getElementById("couponsList");
+        var div = document.createElement("div");
+        div.className = "claimed-coupon";
+        div.innerHTML = '<span>🎟️ <strong>' + currentWonPrize + '</strong></span><span style="font-size:0.75rem; color:#888;">Chưa dùng</span>';
+        bag.prepend(div);
+    }
+
+    function initHearts() {
+        var canvas = document.getElementById("heart-canvas");
+        if (!canvas) return;
+        var ctx = canvas.getContext("2d");
+        var w = canvas.width = window.innerWidth;
+        var h = canvas.height = window.innerHeight;
+
+        var hearts = Array.from({ length: 18 }, function() {
+            return {
+                x: Math.random() * w,
+                y: Math.random() * h,
+                size: Math.random() * 14 + 10,
+                speed: Math.random() * 1.2 + 0.5
+            };
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            hearts.forEach(function(p) {
+                ctx.font = p.size + "px serif";
+                ctx.fillStyle = "rgba(255, 107, 129, 0.4)";
+                ctx.fillText("❤️", p.x, p.y);
+                p.y -= p.speed;
+                if (p.y < -20) { p.y = h + 20; p.x = Math.random() * w; }
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function renderWheelEditorRows(items) {
+        var container = document.getElementById("wheelItemsEditor");
+        if (!container) return;
+        container.innerHTML = "";
+
+        items.forEach(function(text, idx) {
+            var row = document.createElement("div");
+            row.className = "wheel-item-row";
+            var bg = WHEEL_COLORS[idx % WHEEL_COLORS.length];
+
+            var badge = document.createElement("div");
+            badge.className = "wheel-item-badge";
+            badge.style.background = bg;
+            badge.innerText = idx + 1;
+
+            var inp = document.createElement("input");
+            inp.type = "text";
+            inp.className = "form-input wheel-item-input";
+            inp.placeholder = "Nhập tên phần thưởng...";
+            inp.value = String(text);
+
+            var delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className = "del-wheel-btn";
+            delBtn.innerText = "✕";
+            delBtn.onclick = function() {
+                var currentCount = container.querySelectorAll(".wheel-item-row").length;
+                if (currentCount <= 2) {
+                    alert("Vòng quay cần ít nhất 2 ô!");
+                    return;
+                }
+                row.remove();
+                var rem = Array.from(container.querySelectorAll(".wheel-item-input")).map(function(i) { return i.value; });
+                renderWheelEditorRows(rem);
+            };
+
+            row.appendChild(badge);
+            row.appendChild(inp);
+            row.appendChild(delBtn);
+            container.appendChild(row);
+        });
+    }
+
+    function addWheelItemRow() {
+        var container = document.getElementById("wheelItemsEditor");
+        var currentCount = container.querySelectorAll(".wheel-item-row").length;
+        if (currentCount >= 12) {
+            alert("Tối đa 12 ô quà trên vòng quay!");
+            return;
+        }
+        var currentValues = Array.from(container.querySelectorAll(".wheel-item-input")).map(function(inp) { return inp.value; });
+        currentValues.push("Vé Đặc Quyền #" + (currentCount + 1));
+        renderWheelEditorRows(currentValues);
+    }
+
+    function openEditor() {
+        var modal = document.getElementById("editorModal");
+        if (!modal) return;
+
+        pendingAudioFile = null;
+        document.getElementById("cfgFemale").value = APP_DATA.femaleName;
+        document.getElementById("cfgMale").value = APP_DATA.maleName;
+        document.getElementById("cfgStartDate").value = APP_DATA.startDate;
+        document.getElementById("cfgMusicUrl").value = APP_DATA.hasLocalAudio ? "" : (APP_DATA.musicUrl || "");
+        document.getElementById("cfgLetter").value = APP_DATA.letter;
+
+        var badge = document.getElementById("audioStatusBadge");
+        if (APP_DATA.hasLocalAudio && APP_DATA.musicName) {
+            badge.style.display = "inline-block";
+            badge.innerText = "🎵 Đang dùng file nhạc từ máy: " + APP_DATA.musicName;
+        } else {
+            badge.style.display = "none";
+        }
+
+        var audioInput = document.getElementById("cfgAudioFile");
+        audioInput.value = "";
+        audioInput.onchange = function(e) {
+            if (e.target.files && e.target.files[0]) {
+                pendingAudioFile = e.target.files[0];
+                badge.style.display = "inline-block";
+                badge.innerText = "🎵 Đã chọn file: " + pendingAudioFile.name + " (Bấm Lưu để áp dụng)";
+                document.getElementById("cfgMusicUrl").value = "";
+            }
+        };
+
+        renderWheelEditorRows(APP_DATA.coupons);
+
+        var grid = document.getElementById("uploadSlotsGrid");
+        grid.innerHTML = "";
+
+        for (var i = 0; i < 9; i++) {
+            (function(idx) {
+                var p = APP_DATA.photos[idx] || { url: "", caption: "Ảnh " + (idx + 1) };
+                var card = document.createElement("div");
+                card.className = "slot-card" + (p.url ? " has-img" : "");
+
+                var previewSrc = p.url ? p.url : "https://dummyimage.com/150x150/e2e8f0/718096.png&text=+Tải+ảnh+" + (idx + 1);
+
+                card.innerHTML =
+                    '<img class="slot-preview" id="slotPrev_' + idx + '" src="' + previewSrc + '">' +
+                    '<input type="text" class="slot-caption-input" id="slotCap_' + idx + '" placeholder="Chú thích ảnh..." value="' + String(p.caption || '').replace(/"/g, '&quot;') + '">' +
+                    '<label class="slot-upload-btn">' +
+                        '📁 Chọn ảnh ' + (idx + 1) +
+                        '<input type="file" accept="image/*" style="display:none;" id="slotInput_' + idx + '">' +
+                    '</label>';
+
+                grid.appendChild(card);
+
+                setTimeout(function() {
+                    var fileInput = document.getElementById("slotInput_" + idx);
+                    if (fileInput) {
+                        fileInput.addEventListener("change", function(e) {
+                            if (e.target.files && e.target.files[0]) {
+                                compressUploadedImage(e.target.files[0], function(compressed) {
+                                    APP_DATA.photos[idx].url = compressed;
+                                    document.getElementById("slotPrev_" + idx).src = compressed;
+                                    card.classList.add("has-img");
+                                });
+                            }
+                        });
+                    }
+                }, 0);
+            })(i);
+        }
+
+        var bulkInput = document.getElementById("cfgAddPhotosBulk");
+        bulkInput.onchange = function(e) {
+            if (e.target.files && e.target.files.length > 0) {
+                var files = Array.from(e.target.files).slice(0, 9);
+                files.forEach(function(file, i) {
+                    compressUploadedImage(file, function(compressed) {
+                        APP_DATA.photos[i].url = compressed;
+                        APP_DATA.photos[i].caption = file.name.split('.')[0];
+                        var prev = document.getElementById("slotPrev_" + i);
+                        var cap = document.getElementById("slotCap_" + i);
+                        if (prev) prev.src = compressed;
+                        if (cap) cap.value = APP_DATA.photos[i].caption;
+                    });
+                });
+            }
+        };
+
+        modal.classList.add("active");
+    }
+
+    function closeEditor() {
+        var modal = document.getElementById("editorModal");
+        if (modal) modal.classList.remove("active");
+    }
+
+    function saveEditorConfig() {
+        APP_DATA.femaleName = document.getElementById("cfgFemale").value || "Em";
+        APP_DATA.maleName = document.getElementById("cfgMale").value || "Anh";
+        APP_DATA.startDate = document.getElementById("cfgStartDate").value || "2024-02-14";
+        APP_DATA.letter = document.getElementById("cfgLetter").value || APP_DATA.letter;
+
+        var wheelInputs = document.querySelectorAll(".wheel-item-input");
+        var updatedCoupons = [];
+        wheelInputs.forEach(function(inp) {
+            var val = inp.value.trim();
+            if (val !== "") updatedCoupons.push(val);
+        });
+        if (updatedCoupons.length >= 2) {
+            APP_DATA.coupons = updatedCoupons;
+        }
+
+        for (var i = 0; i < 9; i++) {
+            var capEl = document.getElementById("slotCap_" + i);
+            if (capEl) {
+                APP_DATA.photos[i].caption = capEl.value || ("Ảnh " + (i + 1));
+            }
+        }
+
+        var newMusicUrl = document.getElementById("cfgMusicUrl").value.trim();
+
+        if (pendingAudioFile) {
+            var fileToSave = pendingAudioFile;
+            APP_DATA.hasLocalAudio = true;
+            APP_DATA.musicName = fileToSave.name;
+            APP_DATA.musicUrl = "";
+
+            if (currentAudioBlobUrl) URL.revokeObjectURL(currentAudioBlobUrl);
+            currentAudioBlobUrl = URL.createObjectURL(fileToSave);
+
+            saveAudioBlobToDB(fileToSave, function() {
+                applyAudioSource(currentAudioBlobUrl, true);
+                finalizeSave();
+            });
+            return;
+        } else if (newMusicUrl !== "") {
+            APP_DATA.hasLocalAudio = false;
+            APP_DATA.musicName = "Link nhạc tùy chỉnh";
+            APP_DATA.musicUrl = newMusicUrl;
+            deleteAudioBlobFromDB();
+            applyAudioSource(APP_DATA.musicUrl, true);
+        }
+
+        finalizeSave();
+    }
+
+    function finalizeSave() {
+        try {
+            localStorage.setItem("love_gift_store_v12", JSON.stringify(APP_DATA));
+            closeEditor();
+            renderView();
+            alert("Đã lưu thành công! Nhạc nền, 9 ảnh và vòng quay đã được cập nhật.");
+        } catch (e) {
+            console.error("Lỗi lưu dữ liệu:", e);
+            alert("Bộ nhớ tạm của trình duyệt bị đầy! Hãy thử giảm dung lượng ảnh.");
+        }
+    }
+
+    function exportStandaloneHTML() {
+        function buildAndDownload(finalDataObj) {
+            try {
+                var docClone = document.documentElement.cloneNode(true);
+                var tb = docClone.querySelector("#senderToolbar");
+                var ed = docClone.querySelector("#editorModal");
+                var pv = docClone.querySelector("#previewExitBar");
+                if (tb) tb.remove();
+                if (ed) ed.remove();
+                if (pv) pv.remove();
+
+                var configScript = docClone.querySelector("#embedded-config-script");
+                if (configScript) {
+                    configScript.textContent = JSON.stringify(finalDataObj);
+                }
+
+                var htmlString = "<!DOCTYPE html>\n" + docClone.outerHTML;
+                var blob = new Blob([htmlString], { type: "text/html;charset=utf-8" });
+                var url = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+                a.href = url;
+                a.download = "Mon_Qua_Gui_" + (finalDataObj.maleName || "Anh").replace(/\s+/g, "_") + ".html";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+
+                alert("Đã tải xong file quà tặng hoàn chỉnh! Gửi file này cho bạn trai mở lên là chạy ngay!");
+            } catch (err) {
+                alert("Có lỗi khi đóng gói file: " + err.message);
+            }
+        }
+
+        var exportData = Object.assign({}, APP_DATA);
+        if (exportData.hasLocalAudio) {
+            loadAudioBlobFromDB(function(blobFile) {
+                if (blobFile) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        exportData.musicUrl = e.target.result;
+                        exportData.hasLocalAudio = false;
+                        buildAndDownload(exportData);
+                    };
+                    reader.readAsDataURL(blobFile);
+                } else {
+                    buildAndDownload(exportData);
+                }
+            });
+        } else {
+            buildAndDownload(exportData);
+        }
+    }
+
+    function generateShareLink() {
+        try {
+            var dataToShare = Object.assign({}, APP_DATA);
+            if (dataToShare.hasLocalAudio || String(dataToShare.musicUrl || "").startsWith("data:")) {
+                alert("Lưu ý: File nhạc tải trực tiếp từ máy quá lớn để nhét vào link URL. Hãy dùng nút Tải file tặng anh để gửi kèm bài hát từ máy. Link URL bên dưới sẽ phát bản nhạc piano mặc định!");
+                dataToShare.musicUrl = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3";
+                dataToShare.hasLocalAudio = false;
+            }
+
+            var encoded = encodeDataToHash(dataToShare);
+            var shareUrl = window.location.origin + window.location.pathname + "?mode=recipient#data=" + encoded;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareUrl).then(function() {
+                    alert("Đã sao chép link người nhận thành công!");
+                }).catch(function() {
+                    prompt("Sao chép link này gửi bạn trai:", shareUrl);
+                });
+            } else {
+                prompt("Sao chép link này gửi bạn trai:", shareUrl);
+            }
+        } catch (err) {
+            alert("Dữ liệu quá lớn để tạo link URL. Hãy dùng nút Tải file tặng anh!");
+        }
+    }
+
+    function bindEvents() {
+        var btnOpenGift = document.getElementById("btnOpenGift");
+        if (btnOpenGift) btnOpenGift.addEventListener("click", openLoveGift);
+
+        var vinyl = document.getElementById("vinylDisk");
+        if (vinyl) vinyl.addEventListener("click", toggleMusic);
+
+        var btnOpenEditor = document.getElementById("btnOpenEditor");
+        if (btnOpenEditor) btnOpenEditor.addEventListener("click", openEditor);
+
+        var btnCloseEditor = document.getElementById("btnCloseEditor");
+        if (btnCloseEditor) btnCloseEditor.addEventListener("click", closeEditor);
+
+        var btnSaveEditor = document.getElementById("btnSaveEditor");
+        if (btnSaveEditor) btnSaveEditor.addEventListener("click", saveEditorConfig);
+
+        var btnPreview = document.getElementById("btnPreviewMode");
+        if (btnPreview) btnPreview.addEventListener("click", function() { togglePreviewMode(true); });
+
+        var btnExitPreview = document.getElementById("btnExitPreview");
+        if (btnExitPreview) btnExitPreview.addEventListener("click", function() { togglePreviewMode(false); });
+
+        var btnExport = document.getElementById("btnExportFile");
+        if (btnExport) btnExport.addEventListener("click", exportStandaloneHTML);
+
+        var btnShare = document.getElementById("btnShareLink");
+        if (btnShare) btnShare.addEventListener("click", generateShareLink);
+
+        var spinBtn = document.getElementById("spinBtn");
+        if (spinBtn) spinBtn.addEventListener("click", spinWheel);
+
+        var btnClaim = document.getElementById("btnClaimPrize");
+        if (btnClaim) btnClaim.addEventListener("click", claimPrize);
+
+        var btnAddWheel = document.getElementById("btnAddWheelRow");
+        if (btnAddWheel) btnAddWheel.addEventListener("click", addWheelItemRow);
+    }
+
+    function initApp() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var isRecipient = urlParams.get("mode") === "recipient";
+
+        var embeddedEl = document.getElementById("embedded-config-script");
+        var hasEmbedded = false;
+        if (embeddedEl && embeddedEl.textContent.trim() !== "") {
+            try {
+                var embeddedData = JSON.parse(embeddedEl.textContent);
+                APP_DATA = Object.assign({}, APP_DATA, embeddedData);
+                hasEmbedded = true;
+                isRecipient = true;
+            } catch (e) {}
+        }
+
+        if (isRecipient) {
+            document.body.classList.add("recipient-mode");
+            var tb = document.getElementById("senderToolbar");
+            var ed = document.getElementById("editorModal");
+            var pv = document.getElementById("previewExitBar");
+            if (tb) tb.remove();
+            if (ed) ed.remove();
+            if (pv) pv.remove();
+        }
+
+        var hash = window.location.hash;
+        var loadedFromHash = false;
+
+        if (!hasEmbedded && hash && hash.startsWith("#data=")) {
+            try {
+                var encoded = hash.substring(6);
+                var parsedData = decodeDataFromHash(encoded);
+                if (parsedData) {
+                    APP_DATA = Object.assign({}, APP_DATA, parsedData);
+                    loadedFromHash = true;
+                }
+            } catch (e) {}
+        }
+
+        if (!hasEmbedded && !loadedFromHash && !isRecipient) {
+            try {
+                var saved = localStorage.getItem("love_gift_store_v12");
+                if (saved) {
+                    var parsed = JSON.parse(saved);
+                    APP_DATA = Object.assign({}, APP_DATA, parsed);
+                }
+            } catch (e) {}
+        }
+
+        while (APP_DATA.photos.length < 9) {
+            APP_DATA.photos.push({ url: "", caption: "Khoảnh khắc " + (APP_DATA.photos.length + 1) });
+        }
+
+        if (!Array.isArray(APP_DATA.coupons) || APP_DATA.coupons.length < 2) {
+            APP_DATA.coupons = ["Vé Ôm 24/7", "Vé Nấu Ăn Tối", "Vé Tha Lỗi", "Vé Đi Date"];
+        }
+
+        if (!hasEmbedded && !loadedFromHash && APP_DATA.hasLocalAudio) {
+            loadAudioBlobFromDB(function(blobFile) {
+                if (blobFile) {
+                    if (currentAudioBlobUrl) URL.revokeObjectURL(currentAudioBlobUrl);
+                    currentAudioBlobUrl = URL.createObjectURL(blobFile);
+                    applyAudioSource(currentAudioBlobUrl, false);
+                } else {
+                    applyAudioSource(APP_DATA.musicUrl, false);
+                }
+            });
+        } else {
+            applyAudioSource(APP_DATA.musicUrl, false);
+        }
+
+        bindEvents();
+        renderView();
+        initHearts();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initApp);
+    } else {
+        initApp();
+    }
+})();
+</script>
+</body>
+</html>
