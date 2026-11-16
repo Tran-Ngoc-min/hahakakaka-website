@@ -1654,9 +1654,37 @@ async function uploadPhotoToSupabase(fileBlob, originalName) {
                 "love_gift_store_v12",
                 JSON.stringify(APP_DATA)
             );
+            // Tao ID rieng cho mon qua
+var shareId = window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-            var encoded = encodeDataToHash(dataToShare);
-            var shareUrl = window.location.origin + window.location.pathname + "?mode=recipient#data=" + encoded;
+// Luu du lieu mon qua vao Supabase Database
+var baseUrl = SUPABASE_URL.replace(/\/$/, "");
+
+var response = await fetch(baseUrl + "/rest/v1/love_gifts", {
+    method: "POST",
+    headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({
+        id: shareId,
+        data: dataToShare
+    })
+});
+
+if (!response.ok) {
+    var errorText = await response.text();
+    throw new Error("Luu mon qua that bai: " + errorText);
+}
+
+// Tao link ngan
+var shareUrl = window.location.origin +
+    window.location.pathname +
+    "?mode=recipient&id=" + shareId;
 
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(shareUrl).then(function() {
@@ -1712,7 +1740,7 @@ async function uploadPhotoToSupabase(fileBlob, originalName) {
         if (btnAddWheel) btnAddWheel.addEventListener("click", addWheelItemRow);
     }
 
-    function initApp() {
+    async function initApp() {
         var urlParams = new URLSearchParams(window.location.search);
         var isRecipient = urlParams.get("mode") === "recipient";
 
@@ -1736,20 +1764,54 @@ async function uploadPhotoToSupabase(fileBlob, originalName) {
             if (ed) ed.remove();
             if (pv) pv.remove();
         }
+        if (!hasEmbedded && isRecipient && urlParams.get("id")) {
+    try {
+        var giftId = urlParams.get("id");
+        var baseUrl = SUPABASE_URL.replace(/\/$/, "");
 
-        var hash = window.location.hash;
-        var loadedFromHash = false;
-
-        if (!hasEmbedded && hash && hash.startsWith("#data=")) {
-            try {
-                var encoded = hash.substring(6);
-                var parsedData = decodeDataFromHash(encoded);
-                if (parsedData) {
-                    APP_DATA = Object.assign({}, APP_DATA, parsedData);
-                    loadedFromHash = true;
+        var response = await fetch(
+            baseUrl + "/rest/v1/love_gifts?id=eq." +
+            encodeURIComponent(giftId) + "&select=data",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + SUPABASE_ANON_KEY
                 }
-            } catch (e) {}
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
         }
+
+        var rows = await response.json();
+
+        if (!rows || rows.length === 0) {
+            throw new Error("Không tìm thấy món quà.");
+        }
+
+        APP_DATA = Object.assign({}, APP_DATA, rows[0].data);
+        loadedFromHash = true;
+
+    } catch (e) {
+        console.error("Lỗi tải món quà:", e);
+        alert("Không tải được món quà: " + e.message);
+        return;
+    }
+
+} else if (!hasEmbedded && hash && hash.startsWith("#data=")) {
+    // Giữ khả năng mở link cũ
+    try {
+        var encoded = hash.substring(6);
+        var parsedData = decodeDataFromHash(encoded);
+
+        if (parsedData) {
+            APP_DATA = Object.assign({}, APP_DATA, parsedData);
+            loadedFromHash = true;
+        }
+    } catch (e) {}
+}
 
         if (!hasEmbedded && !loadedFromHash && !isRecipient) {
             try {
