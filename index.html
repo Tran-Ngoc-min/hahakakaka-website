@@ -782,6 +782,7 @@ body.recipient-mode .main-container { padding-top: 24px; }
     var SUPABASE_URL = "https://vdyykiicdgjdeimugpcc.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_M2ojzVrDAhEg5UO-vBEFaw_TZsT9p6K";
     var SUPABASE_AUDIO_BUCKET = "my-audio";
+    var SUPABASE_PHOTO_BUCKET = "my-photos";
 
     function uploadAudioToSupabase(fileBlob, originalName) {
         return new Promise(function(resolve, reject) {
@@ -821,6 +822,52 @@ body.recipient-mode .main-container { padding-top: 24px; }
             }).catch(reject);
         });
     }
+    
+async function uploadPhotoToSupabase(fileBlob, originalName) {
+    var baseUrl = SUPABASE_URL.replace(/\/$/, "");
+
+    var ext = (String(originalName || "photo.jpg")
+        .split(".").pop() || "jpg")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+    if (!ext || ext.length > 8) ext = "jpg";
+
+    var uniqueName = "photo-" + Date.now() + "-" +
+        (window.crypto && crypto.randomUUID
+            ? crypto.randomUUID()
+            : Math.random().toString(36).slice(2)) +
+        "." + ext;
+
+    var objectPath = uniqueName;
+
+    var response = await fetch(
+        baseUrl + "/storage/v1/object/" +
+        encodeURIComponent(SUPABASE_PHOTO_BUCKET) +
+        "/" + encodeURIComponent(objectPath),
+        {
+            method: "POST",
+            headers: {
+                "apikey": SUPABASE_ANON_KEY,
+                "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+                "Content-Type": fileBlob.type || "image/jpeg",
+                "x-upsert": "false"
+            },
+            body: fileBlob
+        }
+    );
+
+    if (!response.ok) {
+        var errorText = await response.text();
+        throw new Error("Supabase upload ảnh thất bại (" +
+            response.status + "): " + errorText);
+    }
+
+    return baseUrl + "/storage/v1/object/public/" +
+        encodeURIComponent(SUPABASE_PHOTO_BUCKET) +
+        "/" + encodeURIComponent(objectPath);
+}
+
 
     var APP_DATA = {
         femaleName: "Em",
@@ -1350,10 +1397,28 @@ body.recipient-mode .main-container { padding-top: 24px; }
                     if (fileInput) {
                         fileInput.addEventListener("change", function(e) {
                             if (e.target.files && e.target.files[0]) {
-                                compressUploadedImage(e.target.files[0], function(compressed) {
-                                    APP_DATA.photos[idx].url = compressed;
-                                    document.getElementById("slotPrev_" + idx).src = compressed;
-                                    card.classList.add("has-img");
+                                compressUploadedImage(e.target.files[0], async function(compressed) {
+                                    try {
+                                        // Chuyen Base64 thanh Blob
+                                        var photoBlob = await fetch(compressed)
+                                            .then(function(response) {
+                                                return response.blob();
+                                            });
+                                        // Upload anh len Supabase
+                                        var publicPhotoUrl = await uploadPhotoToSupabase(
+                                            photoBlob,
+                                            e.target.files[0].name
+                                        );
+                                        // Luu URL anh tren Supabase
+                                        APP_DATA.photos[idx].url = publicPhotoUrl;
+                                        // Hien thi anh
+                                        document.getElementById("slotPrev_" + idx).src = publicPhotoUrl;
+                                        card.classList.add("has-img");
+                                        console.log("Upload anh thanh cong:", publicPhotoUrl);
+                                    } catch (err) {
+                                        console.error("Loi upload anh:", err);
+                                        alert("Upload anh that bai: " + err.message);
+                                    }
                                 });
                             }
                         });
@@ -1366,16 +1431,41 @@ body.recipient-mode .main-container { padding-top: 24px; }
         bulkInput.onchange = function(e) {
             if (e.target.files && e.target.files.length > 0) {
                 var files = Array.from(e.target.files).slice(0, 9);
-                files.forEach(function(file, i) {
-                    compressUploadedImage(file, function(compressed) {
-                        APP_DATA.photos[i].url = compressed;
-                        APP_DATA.photos[i].caption = file.name.split('.')[0];
-                        var prev = document.getElementById("slotPrev_" + i);
-                        var cap = document.getElementById("slotCap_" + i);
-                        if (prev) prev.src = compressed;
-                        if (cap) cap.value = APP_DATA.photos[i].caption;
+                files.forEach(async function(file, i) {
+    try {
+        compressUploadedImage(file, async function(compressed) {
+            try {
+                var photoBlob = await fetch(compressed)
+                    .then(function(response) {
+                        return response.blob();
                     });
-                });
+
+                var publicPhotoUrl = await uploadPhotoToSupabase(
+                    photoBlob,
+                    file.name
+                );
+
+                APP_DATA.photos[i].url = publicPhotoUrl;
+                APP_DATA.photos[i].caption = file.name.split('.')[0];
+
+                var prev = document.getElementById("slotPrev_" + i);
+                var cap = document.getElementById("slotCap_" + i);
+
+                if (prev) prev.src = publicPhotoUrl;
+                if (cap) cap.value = APP_DATA.photos[i].caption;
+
+                console.log("Upload anh " + (i + 1) + " thanh cong");
+
+            } catch (err) {
+                console.error("Loi upload anh " + (i + 1), err);
+                alert("Upload anh " + (i + 1) + " that bai: " + err.message);
+            }
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+});
             }
         };
 
@@ -1532,6 +1622,38 @@ body.recipient-mode .main-container { padding-top: 24px; }
                 dataToShare.hasLocalAudio = false;
                 dataToShare.musicName = dataToShare.musicName || "Nhạc tùy chỉnh";
             }
+            
+            // ===== UPLOAD 9 ANH LEN SUPABASE =====
+            for (var i = 0; i < dataToShare.photos.length; i++) {
+                var photo = dataToShare.photos[i];
+
+                if (photo.url &&
+                    String(photo.url).startsWith("data:image/")) {
+
+                    alert("Đang tải ảnh " + (i + 1) +
+                        "/9 lên Supabase...");
+
+                    var photoBlob = await fetch(photo.url)
+                        .then(function(response) {
+                            return response.blob();
+                        });
+
+                    var publicPhotoUrl = await uploadPhotoToSupabase(
+                        photoBlob,
+                        "photo-" + (i + 1) + ".jpg"
+                    );
+
+                    // Lưu URL thay cho Base64
+                    dataToShare.photos[i].url = publicPhotoUrl;
+                    APP_DATA.photos[i].url = publicPhotoUrl;
+                }
+            }
+
+            // Lưu lại cấu hình mới trong trình duyệt
+            localStorage.setItem(
+                "love_gift_store_v12",
+                JSON.stringify(APP_DATA)
+            );
 
             var encoded = encodeDataToHash(dataToShare);
             var shareUrl = window.location.origin + window.location.pathname + "?mode=recipient#data=" + encoded;
