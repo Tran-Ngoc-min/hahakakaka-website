@@ -1764,6 +1764,11 @@ var shareUrl = window.location.origin +
             if (ed) ed.remove();
             if (pv) pv.remove();
         }
+        
+        // Khai báo biến dùng để kiểm tra dữ liệu từ URL
+        var hash = window.location.hash;
+        var loadedFromHash = false;
+
         if (!hasEmbedded && isRecipient && urlParams.get("id")) {
     try {
         var giftId = urlParams.get("id");
@@ -1797,7 +1802,6 @@ var shareUrl = window.location.origin +
     } catch (e) {
         console.error("Lỗi tải món quà:", e);
         alert("Không tải được món quà: " + e.message);
-        return;
     }
 
 } else if (!hasEmbedded && hash && hash.startsWith("#data=")) {
