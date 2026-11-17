@@ -1123,6 +1123,10 @@ async function uploadPhotoToSupabase(fileBlob, originalName) {
         document.getElementById("txtFemale").innerText = APP_DATA.femaleName;
         document.getElementById("txtMale").innerText = APP_DATA.maleName;
         document.getElementById("envRecipientTitle").innerText = "Gửi " + APP_DATA.maleName + " Yêu! ❤️";
+        if (isAppOpened) {
+            var letterBox = document.getElementById("typewriterLetter");
+            if (letterBox) letterBox.innerText = APP_DATA.letter;
+        }
 
         var gallery = document.getElementById("photoGallery");
         gallery.innerHTML = "";
